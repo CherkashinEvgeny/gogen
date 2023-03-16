@@ -43,6 +43,12 @@ func (r *SignRenderer) GetContext() Code {
 
 func (r *SignRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.in != nil {
+		r.in.SetContext(r)
+	}
+	if r.out != nil {
+		r.out.SetContext(r)
+	}
 }
 
 func (r *SignRenderer) Render(w Writer) {
@@ -69,7 +75,7 @@ func (r *SignRenderer) renderIn(w Writer) {
 }
 
 func (r *SignRenderer) hasOut() bool {
-	return RuneCount(r.out) > 0
+	return !IsEmpty(r.out)
 }
 
 func (r *SignRenderer) renderOut(w Writer) {
@@ -155,6 +161,9 @@ func (r *ParamsRenderer) GetContext() Code {
 
 func (r *ParamsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *ParamsRenderer) Render(w Writer) {
@@ -215,10 +224,10 @@ func (r *ParamRenderer) GetType() Code {
 	return r.ttype
 }
 
-func (r *ParamRenderer) SetType(ptype Code) {
-	r.ttype = ptype
-	if ptype != nil {
-		ptype.SetContext(r)
+func (r *ParamRenderer) SetType(ttype Code) {
+	r.ttype = ttype
+	if ttype != nil {
+		ttype.SetContext(r)
 	}
 }
 
@@ -236,6 +245,9 @@ func (r *ParamRenderer) GetContext() Code {
 
 func (r *ParamRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.ttype != nil {
+		r.ttype.SetContext(r)
+	}
 }
 
 func (r *ParamRenderer) Render(w Writer) {

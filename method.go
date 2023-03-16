@@ -66,6 +66,15 @@ func (r *MethodRenderer) GetContext() Code {
 
 func (r *MethodRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.receiver != nil {
+		r.receiver.SetContext(r)
+	}
+	if r.signature != nil {
+		r.signature.SetContext(r)
+	}
+	if r.body != nil {
+		r.body.SetContext(r)
+	}
 }
 
 func (r *MethodRenderer) Render(w Writer) {
@@ -112,10 +121,10 @@ func (r *ReceiverRenderer) GetType() Code {
 	return r.ttype
 }
 
-func (r *ReceiverRenderer) SetType(ptype Code) {
-	r.ttype = ptype
-	if ptype != nil {
-		ptype.SetContext(r)
+func (r *ReceiverRenderer) SetType(ttype Code) {
+	r.ttype = ttype
+	if ttype != nil {
+		ttype.SetContext(r)
 	}
 }
 
@@ -125,6 +134,9 @@ func (r *ReceiverRenderer) GetContext() Code {
 
 func (r *ReceiverRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.ttype != nil {
+		r.ttype.SetContext(r)
+	}
 }
 
 func (r *ReceiverRenderer) Render(w Writer) {

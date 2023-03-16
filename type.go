@@ -3,10 +3,9 @@ package gen
 var _ Code = (*TypeRenderer)(nil)
 
 type TypeRenderer struct {
-	name    string
-	ttype   Code
-	methods Code
-	ctx     Code
+	name  string
+	ttype Code
+	ctx   Code
 }
 
 func Type(name string, ttype Code) *TypeRenderer {
@@ -49,9 +48,4 @@ func (r *TypeRenderer) Render(w Writer) {
 	w.Write(r.name)
 	w.Write(" ")
 	r.ttype.Render(w)
-	if r.methods != nil {
-		w.Br()
-		w.Br()
-		r.methods.Render(w)
-	}
 }

@@ -88,6 +88,9 @@ func (r *ImportsRenderer) GetContext() Code {
 
 func (r *ImportsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *ImportsRenderer) Render(w Writer) {

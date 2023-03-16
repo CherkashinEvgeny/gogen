@@ -30,6 +30,9 @@ func (r *StructRenderer) GetContext() Code {
 
 func (r *StructRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.fields != nil {
+		r.fields.SetContext(r)
+	}
 }
 
 func (r *StructRenderer) Render(w Writer) {
@@ -105,6 +108,9 @@ func (r *FieldDeclsRenderer) GetContext() Code {
 
 func (r *FieldDeclsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *FieldDeclsRenderer) Render(w Writer) {
@@ -164,10 +170,10 @@ func (r *FieldDeclRenderer) GetType() Code {
 	return r.ttype
 }
 
-func (r *FieldDeclRenderer) SetType(ftype Code) {
-	r.ttype = ftype
-	if ftype != nil {
-		ftype.SetContext(r)
+func (r *FieldDeclRenderer) SetType(ttype Code) {
+	r.ttype = ttype
+	if ttype != nil {
+		ttype.SetContext(r)
 	}
 }
 
@@ -177,6 +183,9 @@ func (r *FieldDeclRenderer) GetContext() Code {
 
 func (r *FieldDeclRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.ttype != nil {
+		r.ttype.SetContext(r)
+	}
 }
 
 func (r *FieldDeclRenderer) Render(w Writer) {

@@ -61,6 +61,12 @@ func (r *PkgRenderer) GetContext() Code {
 }
 
 func (r *PkgRenderer) SetContext(_ Code) {
+	if r.imports != nil {
+		r.imports.SetContext(r)
+	}
+	if r.code != nil {
+		r.code.SetContext(r)
+	}
 }
 
 func (r *PkgRenderer) Render(w Writer) {

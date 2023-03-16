@@ -30,6 +30,9 @@ func (r *EmbeddedRenderer) GetContext() Code {
 
 func (r *EmbeddedRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.ftype != nil {
+		r.ftype.SetContext(r)
+	}
 }
 
 func (r *EmbeddedRenderer) Render(w Writer) {

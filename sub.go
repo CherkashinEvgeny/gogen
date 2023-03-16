@@ -34,6 +34,9 @@ func (r *SubRenderer) GetContext() Code {
 
 func (r *SubRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *SubRenderer) Render(w Writer) {

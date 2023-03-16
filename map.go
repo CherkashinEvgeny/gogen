@@ -43,6 +43,12 @@ func (r *MapRenderer) GetContext() Code {
 
 func (r *MapRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.key != nil {
+		r.key.SetContext(r)
+	}
+	if r.value != nil {
+		r.value.SetContext(r)
+	}
 }
 
 func (r *MapRenderer) Render(w Writer) {

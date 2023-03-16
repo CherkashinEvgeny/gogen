@@ -3,7 +3,6 @@ package gen
 const (
 	Break    = keywordsRenderer("break")
 	Continue = keywordsRenderer("continue")
-	Return   = keywordsRenderer("return")
 )
 
 var _ Code = keywordsRenderer("")

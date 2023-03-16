@@ -30,6 +30,9 @@ func (r *IfaceRenderer) GetContext() Code {
 
 func (r *IfaceRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.fields != nil {
+		r.fields.SetContext(r)
+	}
 }
 
 func (r *IfaceRenderer) Render(w Writer) {
@@ -55,31 +58,34 @@ func Methods(methods ...Code) *MethodDeclsRenderer {
 	return i
 }
 
-func (l *MethodDeclsRenderer) Len() int {
-	return len(l.items)
+func (r *MethodDeclsRenderer) Len() int {
+	return len(r.items)
 }
 
-func (l *MethodDeclsRenderer) At(i int) Code {
-	return l.items[i]
+func (r *MethodDeclsRenderer) At(i int) Code {
+	return r.items[i]
 }
 
-func (l *MethodDeclsRenderer) Add(items ...Code) {
-	l.items = append(l.items, items...)
+func (r *MethodDeclsRenderer) Add(items ...Code) {
+	r.items = append(r.items, items...)
 	for _, item := range items {
-		item.SetContext(l)
+		item.SetContext(r)
 	}
 }
 
-func (l *MethodDeclsRenderer) GetContext() Code {
-	return l.ctx
+func (r *MethodDeclsRenderer) GetContext() Code {
+	return r.ctx
 }
 
-func (l *MethodDeclsRenderer) SetContext(ctx Code) {
-	l.ctx = ctx
+func (r *MethodDeclsRenderer) SetContext(ctx Code) {
+	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
-func (l *MethodDeclsRenderer) Render(w Writer) {
-	for i, m := range l.items {
+func (r *MethodDeclsRenderer) Render(w Writer) {
+	for i, m := range r.items {
 		if i != 0 {
 			w.Br()
 		}
@@ -127,6 +133,9 @@ func (r *MethodDeclRenderer) GetContext() Code {
 
 func (r *MethodDeclRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.signature != nil {
+		r.signature.SetContext(r)
+	}
 }
 
 func (r *MethodDeclRenderer) Render(w Writer) {

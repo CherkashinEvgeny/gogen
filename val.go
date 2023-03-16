@@ -38,6 +38,9 @@ func (r *ValsRenderer) GetContext() Code {
 
 func (r *ValsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *ValsRenderer) Render(w Writer) {

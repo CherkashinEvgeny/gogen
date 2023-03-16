@@ -38,6 +38,9 @@ func (r *IdsRenderer) GetContext() Code {
 
 func (r *IdsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *IdsRenderer) Render(w Writer) {

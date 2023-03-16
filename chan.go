@@ -48,6 +48,9 @@ func (r *ChanRenderer) GetContext() Code {
 
 func (r *ChanRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.elem != nil {
+		r.elem.SetContext(r)
+	}
 }
 
 func (r *ChanRenderer) Render(w Writer) {

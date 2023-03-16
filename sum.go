@@ -34,6 +34,9 @@ func (r *SumRenderer) GetContext() Code {
 
 func (r *SumRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *SumRenderer) Render(w Writer) {

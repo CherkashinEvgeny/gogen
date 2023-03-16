@@ -63,6 +63,15 @@ func (r *IfElseRenderer) GetContext() Code {
 
 func (r *IfElseRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.cond != nil {
+		r.cond.SetContext(r)
+	}
+	if r.ifBranch != nil {
+		r.ifBranch.SetContext(r)
+	}
+	if r.elseBranch != nil {
+		r.elseBranch.SetContext(r)
+	}
 }
 
 func (r *IfElseRenderer) Render(w Writer) {

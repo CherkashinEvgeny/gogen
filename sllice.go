@@ -30,6 +30,9 @@ func (r *SliceRenderer) GetContext() Code {
 
 func (r *SliceRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.elem != nil {
+		r.elem.SetContext(r)
+	}
 }
 
 func (r *SliceRenderer) Render(w Writer) {

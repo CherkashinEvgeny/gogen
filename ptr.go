@@ -30,6 +30,9 @@ func (r *PtrRenderer) GetContext() Code {
 
 func (r *PtrRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.elem != nil {
+		r.elem.SetContext(r)
+	}
 }
 
 func (r *PtrRenderer) Render(w Writer) {

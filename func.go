@@ -53,6 +53,12 @@ func (r *FuncRenderer) GetContext() Code {
 
 func (r *FuncRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.signature != nil {
+		r.signature.SetContext(r)
+	}
+	if r.body != nil {
+		r.body.SetContext(r)
+	}
 }
 
 func (r *FuncRenderer) Render(w Writer) {

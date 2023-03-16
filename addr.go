@@ -30,6 +30,9 @@ func (r *AddrRenderer) GetContext() Code {
 
 func (r *AddrRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.item != nil {
+		r.item.SetContext(r)
+	}
 }
 
 func (r *AddrRenderer) Render(w Writer) {

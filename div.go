@@ -34,6 +34,9 @@ func (r *DivRenderer) GetContext() Code {
 
 func (r *DivRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *DivRenderer) Render(w Writer) {

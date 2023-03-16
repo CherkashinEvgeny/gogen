@@ -42,6 +42,9 @@ func (r *JoinRenderer) GetContext() Code {
 
 func (r *JoinRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *JoinRenderer) Render(w Writer) {

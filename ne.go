@@ -30,6 +30,9 @@ func (r *NeRenderer) GetContext() Code {
 
 func (r *NeRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.item != nil {
+		r.item.SetContext(r)
+	}
 }
 
 func (r *NeRenderer) Render(w Writer) {

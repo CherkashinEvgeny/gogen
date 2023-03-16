@@ -34,6 +34,9 @@ func (r *LinesRenderer) GetContext() Code {
 
 func (r *LinesRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *LinesRenderer) Render(w Writer) {

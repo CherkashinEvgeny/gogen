@@ -30,6 +30,9 @@ func (r *BracketsRenderer) GetContext() Code {
 
 func (r *BracketsRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.item != nil {
+		r.item.SetContext(r)
+	}
 }
 
 func (r *BracketsRenderer) Render(w Writer) {

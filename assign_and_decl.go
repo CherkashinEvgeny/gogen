@@ -43,6 +43,12 @@ func (r *AssignAndDeclRenderer) GetContext() Code {
 
 func (r *AssignAndDeclRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.vars != nil {
+		r.vars.SetContext(r)
+	}
+	if r.vals != nil {
+		r.vals.SetContext(r)
+	}
 }
 
 func (r *AssignAndDeclRenderer) Render(w Writer) {

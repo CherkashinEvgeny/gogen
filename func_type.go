@@ -31,7 +31,7 @@ func (r *FuncTypeRenderer) GetContext() Code {
 func (r *FuncTypeRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
 	if r.signature != nil {
-		r.signature.SetContext(ctx)
+		r.signature.SetContext(r)
 	}
 }
 

@@ -42,6 +42,9 @@ func (r *ArrayRenderer) GetContext() Code {
 
 func (r *ArrayRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	if r.elem != nil {
+		r.elem.SetContext(r)
+	}
 }
 
 func (r *ArrayRenderer) Render(w Writer) {

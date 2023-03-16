@@ -34,6 +34,9 @@ func (r *MultRenderer) GetContext() Code {
 
 func (r *MultRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
+	for _, item := range r.items {
+		item.SetContext(r)
+	}
 }
 
 func (r *MultRenderer) Render(w Writer) {

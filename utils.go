@@ -8,6 +8,10 @@ func Stringify(code Code) string {
 	return b.String()
 }
 
+func IsEmpty(code Code) bool {
+	return RuneCount(code) == 0
+}
+
 func RuneCount(code Code) int {
 	c := &runeCounter{}
 	code.Render(c)
