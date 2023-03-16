@@ -30,10 +30,10 @@ func (r *CallRenderer) GetArgs() Code {
 	return r.args
 }
 
-func (r *CallRenderer) SetArgs(params Code) {
-	r.args = params
-	if params != nil {
-		params.SetContext(r)
+func (r *CallRenderer) SetArgs(args Code) {
+	r.args = args
+	if args != nil {
+		args.SetContext(r)
 	}
 }
 

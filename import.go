@@ -8,10 +8,10 @@ import (
 var _ Sequence = (*ImportsRenderer)(nil)
 
 type ImportsRenderer struct {
-	items   []Code
-	pathMap map[string]struct{}
-	nameMap map[string]struct{}
-	ctx     Code
+	items    []Code
+	pathMap  map[string]string
+	aliasMap map[string]struct{}
+	ctx      Code
 }
 
 func Imports(items ...Code) *ImportsRenderer {
@@ -21,13 +21,10 @@ func Imports(items ...Code) *ImportsRenderer {
 	return r
 }
 
-func (r *ImportsRenderer) init() {
-	if r.pathMap == nil {
-		r.pathMap = map[string]struct{}{}
-	}
-	if r.nameMap == nil {
-		r.nameMap = map[string]struct{}{}
-	}
+func (r *ImportsRenderer) Resolve(path string) (string, bool) {
+	r.init()
+	alias, found := r.pathMap[path]
+	return alias, found
 }
 
 func (r *ImportsRenderer) Len() int {
@@ -46,47 +43,43 @@ func (r *ImportsRenderer) Add(items ...Code) {
 }
 
 func (r *ImportsRenderer) add(item Code) {
-	im, ok := item.(*ImportRenderer)
+	im, ok := item.(*SmartImportRenderer)
 	if !ok {
 		r.items = append(r.items, item)
 		item.SetContext(r)
 		return
 	}
-	_, found := r.pathMap[im.GetPath()]
-	if found {
+	alias, found := r.pathMap[im.GetPath()]
+	if found && alias != "_" {
 		return
 	}
-	r.pathMap[im.GetPath()] = struct{}{}
-	if im.GetAlias() == "." || im.GetAlias() == "_" {
-		r.items = append(r.items, item)
-		item.SetContext(r)
-		return
-	}
-	var name string
-	if im.GetName() != "" {
-		name = im.GetName()
-	}
+	preferredAlias := im.GetName()
 	if im.GetAlias() != "" {
-		name = im.GetAlias()
+		preferredAlias = im.GetAlias()
 	}
-	if name == "" {
-		r.items = append(r.items, item)
-		item.SetContext(r)
-		return
-	}
-	alias := name
-	counter := 1
-	_, found = r.nameMap[alias]
-	for found {
-		counter++
-		alias = name + strconv.Itoa(counter)
-	}
-	r.nameMap[alias] = struct{}{}
-	if name != alias {
+	alias = r.generatePkgAlias(preferredAlias)
+	if preferredAlias != alias {
 		im.SetAlias(alias)
 	}
-	r.items = append(r.items, item)
-	item.SetContext(r)
+	if !found {
+		r.items = append(r.items, item)
+		item.SetContext(r)
+	}
+}
+
+func (r *ImportsRenderer) generatePkgAlias(alias string) string {
+	if alias == "" || alias == "." || alias == "_" {
+		return alias
+	}
+	freeAlias := alias
+	counter := 1
+	_, found := r.aliasMap[freeAlias]
+	for found {
+		counter++
+		freeAlias = alias + strconv.Itoa(counter)
+	}
+	r.aliasMap[freeAlias] = struct{}{}
+	return freeAlias
 }
 
 func (r *ImportsRenderer) GetContext() Code {
@@ -120,23 +113,32 @@ func (r *ImportsRenderer) Render(w Writer) {
 	w.Write(")")
 }
 
-var _ Code = (*ImportRenderer)(nil)
+func (r *ImportsRenderer) init() {
+	if r.pathMap == nil {
+		r.pathMap = map[string]string{}
+	}
+	if r.aliasMap == nil {
+		r.aliasMap = map[string]struct{}{}
+	}
+}
 
-type ImportRenderer struct {
+var _ Code = (*SmartImportRenderer)(nil)
+
+type SmartImportRenderer struct {
 	alias string
 	name  string
 	path  string
 }
 
-func Import(name string, alias string, path string) *ImportRenderer {
-	r := &ImportRenderer{}
+func SmartImport(name string, alias string, path string) *SmartImportRenderer {
+	r := &SmartImportRenderer{}
 	r.SetName(name)
 	r.SetAlias(alias)
 	r.SetPath(path)
 	return r
 }
 
-func (r *ImportRenderer) GetName() string {
+func (r *SmartImportRenderer) GetName() string {
 	if r.name == "" {
 		chunks := strings.Split(r.path, "/")
 		return chunks[len(chunks)-1]
@@ -144,8 +146,55 @@ func (r *ImportRenderer) GetName() string {
 	return r.name
 }
 
-func (r *ImportRenderer) SetName(name string) {
+func (r *SmartImportRenderer) SetName(name string) {
 	r.name = name
+}
+
+func (r *SmartImportRenderer) GetAlias() string {
+	return r.alias
+}
+
+func (r *SmartImportRenderer) SetAlias(alias string) {
+	r.alias = alias
+}
+
+func (r *SmartImportRenderer) GetPath() string {
+	return r.path
+}
+
+func (r *SmartImportRenderer) SetPath(path string) {
+	r.path = path
+}
+
+func (r *SmartImportRenderer) GetContext() Code {
+	return nil
+}
+
+func (r *SmartImportRenderer) SetContext(_ Code) {
+}
+
+func (r *SmartImportRenderer) Render(w Writer) {
+	if r.alias != "" {
+		w.Write(r.alias)
+		w.Write(" ")
+	}
+	w.Write("\"")
+	w.Write(r.path)
+	w.Write("\"")
+}
+
+var _ Code = (*ImportRenderer)(nil)
+
+type ImportRenderer struct {
+	alias string
+	path  string
+}
+
+func Import(alias string, path string) *ImportRenderer {
+	r := &ImportRenderer{}
+	r.SetAlias(alias)
+	r.SetPath(path)
+	return r
 }
 
 func (r *ImportRenderer) GetAlias() string {
