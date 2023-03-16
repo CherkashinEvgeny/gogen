@@ -77,6 +77,7 @@ func (r *ImportsRenderer) generatePkgAlias(alias string) string {
 	for found {
 		counter++
 		freeAlias = alias + strconv.Itoa(counter)
+		_, found = r.aliasMap[freeAlias]
 	}
 	r.aliasMap[freeAlias] = struct{}{}
 	return freeAlias
