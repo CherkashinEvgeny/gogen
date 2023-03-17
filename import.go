@@ -2,7 +2,6 @@ package gen
 
 import (
 	"strconv"
-	"strings"
 )
 
 var _ Sequence = (*ImportsRenderer)(nil)
@@ -144,10 +143,6 @@ func SmartImport(name string, alias string, path string) *SmartImportRenderer {
 }
 
 func (r *SmartImportRenderer) GetName() string {
-	if r.name == "" {
-		chunks := strings.Split(r.path, "/")
-		return chunks[len(chunks)-1]
-	}
 	return r.name
 }
 
