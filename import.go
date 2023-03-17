@@ -48,6 +48,11 @@ func (r *ImportsRenderer) add(item Code) {
 		item.SetContext(r)
 		return
 	}
+	// self import
+	if im.GetName() == "" && im.GetAlias() == "" {
+		r.pathMap[im.GetPath()] = ""
+		return
+	}
 	alias, found := r.pathMap[im.GetPath()]
 	if found && alias != "_" {
 		return
