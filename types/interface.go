@@ -15,7 +15,7 @@ func Interface(t *types.Interface) (code gen.Code) {
 		if !ok {
 			continue
 		}
-		methods.Add(gen.Embedded(gen.Named(
+		methods.Add(gen.Embedded(gen.Qual(
 			nd.Obj().Pkg().Path(),
 			nd.Obj().Name(),
 		)))

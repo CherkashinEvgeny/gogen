@@ -1,56 +1,56 @@
 package gen
 
-var _ Code = (*SmartNamedRenderer)(nil)
+var _ Code = (*SmartQualRenderer)(nil)
 
-type SmartNamedRenderer struct {
+type SmartQualRenderer struct {
 	pkgName string
 	pkgPath string
 	name    string
 	ctx     Code
 }
 
-func SmartNamed(pkgName string, pkgPath string, name string) *SmartNamedRenderer {
-	r := &SmartNamedRenderer{}
+func SmartQual(pkgName string, pkgPath string, name string) *SmartQualRenderer {
+	r := &SmartQualRenderer{}
 	r.SetPkgName(pkgName)
 	r.SetPkgPath(pkgPath)
 	r.SetName(name)
 	return r
 }
 
-func (r *SmartNamedRenderer) GetPkgName() string {
+func (r *SmartQualRenderer) GetPkgName() string {
 	return r.pkgName
 }
 
-func (r *SmartNamedRenderer) SetPkgName(name string) {
+func (r *SmartQualRenderer) SetPkgName(name string) {
 	r.pkgName = name
 }
 
-func (r *SmartNamedRenderer) GetPkgPath() string {
+func (r *SmartQualRenderer) GetPkgPath() string {
 	return r.pkgPath
 }
 
-func (r *SmartNamedRenderer) SetPkgPath(path string) {
+func (r *SmartQualRenderer) SetPkgPath(path string) {
 	r.pkgPath = path
 }
 
-func (r *SmartNamedRenderer) GetName() string {
+func (r *SmartQualRenderer) GetName() string {
 	return r.name
 }
 
-func (r *SmartNamedRenderer) SetName(name string) {
+func (r *SmartQualRenderer) SetName(name string) {
 	r.name = name
 }
 
-func (r *SmartNamedRenderer) GetContext() Code {
+func (r *SmartQualRenderer) GetContext() Code {
 	return r.ctx
 }
 
-func (r *SmartNamedRenderer) SetContext(ctx Code) {
+func (r *SmartQualRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
 	r.addImport()
 }
 
-func (r *SmartNamedRenderer) addImport() {
+func (r *SmartQualRenderer) addImport() {
 	if r.pkgPath == "" {
 		return
 	}
@@ -61,7 +61,7 @@ func (r *SmartNamedRenderer) addImport() {
 	imports.Add(SmartImport(r.pkgName, "", r.pkgPath))
 }
 
-func (r *SmartNamedRenderer) Render(w Writer) {
+func (r *SmartQualRenderer) Render(w Writer) {
 	prefix := r.resolvePkgAlias()
 	if prefix != "" && prefix != "." {
 		w.Write(prefix)
@@ -70,7 +70,7 @@ func (r *SmartNamedRenderer) Render(w Writer) {
 	w.Write(r.name)
 }
 
-func (r *SmartNamedRenderer) resolvePkgAlias() string {
+func (r *SmartQualRenderer) resolvePkgAlias() string {
 	if r.pkgPath == "" {
 		return r.pkgName
 	}
@@ -85,7 +85,7 @@ func (r *SmartNamedRenderer) resolvePkgAlias() string {
 	return alias
 }
 
-func (r *SmartNamedRenderer) findImports() *ImportsRenderer {
+func (r *SmartQualRenderer) findImports() *ImportsRenderer {
 	pkg := r.findPackage()
 	if pkg == nil {
 		return nil
@@ -98,7 +98,7 @@ func (r *SmartNamedRenderer) findImports() *ImportsRenderer {
 	return imports
 }
 
-func (r *SmartNamedRenderer) findPackage() *PkgRenderer {
+func (r *SmartQualRenderer) findPackage() *PkgRenderer {
 	ctx := r.GetContext()
 	for ctx != nil {
 		pkg, ok := ctx.(*PkgRenderer)
@@ -110,46 +110,46 @@ func (r *SmartNamedRenderer) findPackage() *PkgRenderer {
 	return nil
 }
 
-var _ Code = (*NamedRenderer)(nil)
+var _ Code = (*QualRenderer)(nil)
 
-type NamedRenderer struct {
+type QualRenderer struct {
 	pkg  string
 	name string
 	ctx  Code
 }
 
-func Named(pkg string, name string) *NamedRenderer {
-	r := &NamedRenderer{}
+func Qual(pkg string, name string) *QualRenderer {
+	r := &QualRenderer{}
 	r.SetPkg(pkg)
 	r.SetName(name)
 	return r
 }
 
-func (r *NamedRenderer) GetPkg() string {
+func (r *QualRenderer) GetPkg() string {
 	return r.pkg
 }
 
-func (r *NamedRenderer) SetPkg(name string) {
+func (r *QualRenderer) SetPkg(name string) {
 	r.pkg = name
 }
 
-func (r *NamedRenderer) GetName() string {
+func (r *QualRenderer) GetName() string {
 	return r.name
 }
 
-func (r *NamedRenderer) SetName(name string) {
+func (r *QualRenderer) SetName(name string) {
 	r.name = name
 }
 
-func (r *NamedRenderer) GetContext() Code {
+func (r *QualRenderer) GetContext() Code {
 	return r.ctx
 }
 
-func (r *NamedRenderer) SetContext(ctx Code) {
+func (r *QualRenderer) SetContext(ctx Code) {
 	r.ctx = ctx
 }
 
-func (r *NamedRenderer) Render(w Writer) {
+func (r *QualRenderer) Render(w Writer) {
 	if r.pkg != "" && r.pkg != "." {
 		w.Write(r.pkg)
 		w.Write(".")

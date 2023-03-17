@@ -61,6 +61,7 @@ func (r *ImportsRenderer) add(item Code) {
 	if preferredAlias != alias {
 		im.SetAlias(alias)
 	}
+	r.pathMap[im.GetPath()] = alias
 	if !found {
 		r.items = append(r.items, item)
 		item.SetContext(r)
