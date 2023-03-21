@@ -5,11 +5,11 @@ import (
 	"strconv"
 )
 
-func Params(n int) []string {
+func ParamIds(n int) []string {
 	return IdsSequence("arg", n)
 }
 
-func Results(n int) []string {
+func ResultIds(n int) []string {
 	return IdsSequence("res", n)
 }
 
