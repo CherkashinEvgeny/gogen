@@ -1,8 +1,9 @@
 package types
 
 import (
-	gen "github.com/CherkashinEvgeny/gogen"
 	"go/types"
+
+	gen "github.com/CherkashinEvgeny/gogen"
 )
 
 func Interface(t *types.Interface) (code gen.Code) {
@@ -33,4 +34,27 @@ func Interface(t *types.Interface) (code gen.Code) {
 		)))
 	}
 	return gen.Iface(methods)
+}
+
+func ForEachInterfaceMethod(iface *types.Interface, f func(sign *types.Signature)) {
+	n := iface.NumEmbeddeds()
+	for i := 0; i < n; i++ {
+		embedded := iface.EmbeddedType(i)
+		underlying := embedded.Underlying()
+		embeddedIface, ok := underlying.(*types.Interface)
+		if !ok {
+			continue
+		}
+		ForEachInterfaceMethod(embeddedIface, f)
+	}
+	n = iface.NumMethods()
+	for i := 0; i < n; i++ {
+		method := iface.Method(i)
+		methodType := method.Type()
+		sign, ok := methodType.(*types.Signature)
+		if !ok {
+			continue
+		}
+		f(sign)
+	}
 }
