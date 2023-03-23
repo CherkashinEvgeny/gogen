@@ -36,7 +36,7 @@ func Interface(t *types.Interface) (code gen.Code) {
 	return gen.Iface(methods)
 }
 
-func ForEachInterfaceMethod(iface *types.Interface, f func(sign *types.Signature)) {
+func ForEachInterfaceMethod(iface *types.Interface, f func(name string, sign *types.Signature)) {
 	n := iface.NumEmbeddeds()
 	for i := 0; i < n; i++ {
 		embedded := iface.EmbeddedType(i)
@@ -55,6 +55,6 @@ func ForEachInterfaceMethod(iface *types.Interface, f func(sign *types.Signature
 		if !ok {
 			continue
 		}
-		f(sign)
+		f(method.Name(), sign)
 	}
 }
