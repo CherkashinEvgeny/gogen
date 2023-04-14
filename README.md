@@ -29,7 +29,7 @@ import (
 )
 
 func main() {
-	mainFunc := gen.Func("main", Sign(In(), Out()), Lines(
+	mainFunc := Func("main", Sign(In(), Out()), Lines(
 		Call(
 			SmartQual("fmt", "fmt", "Println"),
 			Val("Hello world(:"),
